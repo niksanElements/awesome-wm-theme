@@ -261,11 +261,19 @@ local global_keys = awful.util.table.join(
 		awful.tag.viewidx(1)
 	end),
 
+	awful.key({ "Mod4", "Control" }, "k", function()
+		awful.spawn("xkill")
+	end, { description = "Execute XKill", group = "Application" }),
 	awful.key({ "Mod4", "Control" }, "r", awesome.restart, { description = "Restart awesome", group = "Awesome" }),
 	awful.key({ "Mod4", "Control" }, "q", awesome.quit, { description = "Quit awesome", group = "Awesome" }),
 	awful.key({ "Mod4", "Control" }, "l", function()
 		awful.spawn(session_lock_command)
 	end, { description = "Lock the session", group = "Session" }),
+	-- TODO: see if there is another way to do that
+	awful.key({ "Mod4", "Control" }, "s", function()
+		awful.spawn.with_shell("XDG_CURRENT_DESKTOP=GNOME gnome-control-center")
+	end, { description = "open gnome settings", group = "Awesome" }),
+	awful.key({ "Mod4", "Control" }, "q", awesome.quit, { description = "Quit awesome", group = "Awesome" }),
 
 	awful.key({}, "XF86MonBrightnessUp", function()
 		set_brightness(5, true)
@@ -342,10 +350,6 @@ local global_keys = awful.util.table.join(
 	awful.key({ "Mod4", "Control", "Shift" }, "Cyrillic_a", function()
 		awful.spawn(file_manager)
 	end),
-
-	awful.key({ "Mod4" }, "k", function()
-		awful.spawn("xkill")
-	end, { description = "Execute XKill", group = "Application" }),
 
 	awful.key({ "Mod4", "Shift" }, "d", function()
 		awful.spawn("discord")
