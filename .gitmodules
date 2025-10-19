@@ -1,0 +1,3 @@
+[submodule "modules/keyboard_layout"]
+	path = modules/keyboard_layout
+	url = git@github.com:niksanElements/keyboard_layout.git

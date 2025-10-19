@@ -29,6 +29,7 @@ require("modules/error_handling")
 
 local executer = require("modules/executer")
 local screens_manager = require("modules/screens_manager")
+local keyboard_layout = require("modules/keyboard_layout")
 
 local config_path = gears.filesystem.get_configuration_dir()
 
@@ -74,6 +75,24 @@ local keyboard_layout_widget = KeyboardLayoutWidget()
 local launch_widget = LaunchWidget(launch_command)
 
 -- | Functions | --
+
+-- | Keyboard | --
+
+local kbdcfg = keyboard_layout.kbdcfg({ type = "gui" })
+kbdcfg.add_primary_layout("English", "US", "us")
+kbdcfg.add_primary_layout("Bulgarian", "BG", "bg bas_phonetic")
+-- kbdcfg.add_additional_layout("Deutsch", "DE", "de")
+kbdcfg.bind()
+
+-- Mouse bindings
+kbdcfg.widget:buttons(awful.util.table.join(
+	awful.button({}, 1, function()
+		kbdcfg.switch_next()
+	end),
+	awful.button({}, 3, function()
+		kbdcfg.menu:toggle()
+	end)
+))
 
 -- Panels
 
@@ -370,7 +389,11 @@ local global_keys = awful.util.table.join(
 		toogle_minimize_restore_clients,
 		{ description = "Toggle minimize restore clients", group = "Client" }
 	),
-	awful.key({ "Mod4" }, "Cyrillic_ve", toogle_minimize_restore_clients)
+	awful.key({ "Mod4" }, "Cyrillic_ve", toogle_minimize_restore_clients),
+
+	awful.key({ "Control" }, "Tab", function()
+		kbdcfg.switch_next()
+	end)
 )
 
 local client_keys = awful.util.table.join(
