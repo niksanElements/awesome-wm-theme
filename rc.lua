@@ -19,6 +19,31 @@ require("modules/widgets/launch_widget")
 
 require("awful.autofocus")
 
+-- utility function
+local keycode_cache = {}
+
+local function keycode_from_keysym(sym)
+	if keycode_cache[sym] then
+		return keycode_cache[sym]
+	end
+
+	local cmd = "xmodmap -pke | grep -E ' = " .. sym .. "($| )' | head -n1"
+	local f = io.popen(cmd)
+	local line = f:read("*l")
+	f:close()
+
+	if line then
+		local code = line:match("keycode%s+(%d+)")
+		if code then
+			keycode_cache[sym] = "#" .. code
+			return keycode_cache[sym]
+		end
+	end
+
+	keycode_cache[sym] = sym
+	return sym
+end
+
 local awful = require("awful")
 local gears = require("gears")
 local wibox = require("wibox")
@@ -391,7 +416,7 @@ local global_keys = awful.util.table.join(
 	),
 	awful.key({ "Mod4" }, "Cyrillic_ve", toogle_minimize_restore_clients),
 
-	awful.key({ "Control" }, "Tab", function()
+	awful.key({ "Mod4" }, keycode_from_keysym("o"), function()
 		kbdcfg.switch_next()
 	end)
 )
@@ -403,7 +428,7 @@ local client_keys = awful.util.table.join(
 		c:kill()
 	end, { description = "Kill focused client", group = "Client" }),
 
-	awful.key({ "Mod4" }, "o", move_client_to_next_screen, { description = "Move to next screen", group = "Client" }),
+	-- awful.key({ "Mod4" }, "o", move_client_to_next_screen, { description = "Move to next screen", group = "Client" }),
 
 	awful.key({ "Mod4" }, "n", minimize_client, { description = "Minimize client", group = "Client" }),
 
